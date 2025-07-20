@@ -1,0 +1,23 @@
+{
+  "id": "bove5agvfohvRJ1",
+  "unique_key": "https://twitter.com/search?f=live&q=smartphones&src=typed_query",
+  "order_no": null,
+  "handled_at": "2025-07-20 17:02:15.708757+00:00",
+  "request": {
+    "url": "https://twitter.com/search?q=smartphones&src=typed_query&f=live",
+    "method": "GET",
+    "headers": {},
+    "payload": null,
+    "user_data": {
+      "__crawlee": {
+        "state": 5
+      }
+    },
+    "retry_count": 2,
+    "no_retry": false,
+    "loaded_url": "https://x.com/search?q=smartphones&src=typed_query&f=live",
+    "handled_at": "2025-07-20 17:02:15.708757+00:00",
+    "unique_key": "https://twitter.com/search?f=live&q=smartphones&src=typed_query",
+    "id": "bove5agvfohvRJ1"
+  }
+}
