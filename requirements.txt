@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+crawlee
+playwright
+python-dateutil
+tabulate 
