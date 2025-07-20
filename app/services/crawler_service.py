@@ -1,9 +1,6 @@
-from crawlee.crawlers import PlaywrightCrawler, PlaywrightCrawlingContext
-import asyncio
+from playwright.async_api import async_playwright
 import re
 from datetime import timedelta
-from tabulate import tabulate
-
 
 
 def is_within_48_hours(upload_text):
@@ -22,31 +19,26 @@ def is_within_48_hours(upload_text):
     return delta <= timedelta(hours=48)
 
 async def run_youtube_crawler(query: str):
-    YOUTUBE_URL = f"https://www.youtube.com/results?search_query={query}&sp=CAMSBAgDEAE%253D"
-    crawler = PlaywrightCrawler(
-        max_requests_per_crawl=1,
-        headless=True,
-        browser_type='chromium',
-    )
-    videos_data = []
-
-    @crawler.router.default_handler
-    async def request_handler(context: PlaywrightCrawlingContext):
-        await context.page.goto(YOUTUBE_URL)
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        YOUTUBE_URL = f"https://www.youtube.com/results?search_query={query}&sp=CAMSBAgDEAE%253D"
+        await page.goto(YOUTUBE_URL)
+        videos_data = []
         try:
-            consent_button = await context.page.query_selector('button[aria-label="Agree to the use of cookies and other data for the purposes described"]')
+            consent_button = await page.query_selector('button[aria-label="Agree to the use of cookies and other data for the purposes described"]')
             if consent_button:
                 await consent_button.click()
-                await context.page.wait_for_timeout(2000)
+                await page.wait_for_timeout(2000)
         except Exception:
             pass
 
         for _ in range(5):
-            await context.page.mouse.wheel(0, 10000)
-            await context.page.wait_for_timeout(1000)
+            await page.mouse.wheel(0, 10000)
+            await page.wait_for_timeout(1000)
 
-        await context.page.wait_for_selector('ytd-video-renderer', timeout=10000)
-        videos = await context.page.query_selector_all('ytd-video-renderer')
+        await page.wait_for_selector('ytd-video-renderer', timeout=10000)
+        videos = await page.query_selector_all('ytd-video-renderer')
         for video in videos:
             title_el = await video.query_selector('#video-title')
             if not title_el:
@@ -80,22 +72,9 @@ async def run_youtube_crawler(query: str):
                 "uploaded": upload_text,
                 "is_short": is_short
             })
-
-    await crawler.run([YOUTUBE_URL])
-
+        await browser.close()
     top_videos = sorted(videos_data, key=lambda x: x['views'], reverse=True)[:5]
     return top_videos
-    # table = [
-    #     [
-    #         video['title'],
-    #         video['views'],
-    #         video['uploaded'],
-    #         "Short" if video['is_short'] else "Regular",
-    #         video['url']
-    #     ]
-    #     for video in top_videos
-    # ]
-    # headers = ["Title", "Views", "Uploaded", "Type", "URL"]
-    # print(tabulate(table, headers=headers, tablefmt="grid", maxcolwidths=[30, None, None, None, 40]))
+
 
 
