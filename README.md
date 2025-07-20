@@ -48,3 +48,10 @@ To crawl YouTube for the top 5 "face-cream" videos from the last 48 hours, use:
 http://127.0.0.1:8000/youtube_crawler?query=face-cream
 ```
 
+**Curl Example:**
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:8000/youtube_crawler?query=face%20cream' \
+  -H 'accept: application/json'
+```
+
