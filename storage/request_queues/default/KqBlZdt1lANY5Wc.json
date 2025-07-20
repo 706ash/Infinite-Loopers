@@ -1,0 +1,23 @@
+{
+  "id": "KqBlZdt1lANY5Wc",
+  "unique_key": "https://www.youtube.com/results?search_query=face-cream&sp=camsbagdeae%253d",
+  "order_no": null,
+  "handled_at": "2025-07-20 07:22:11.005465+00:00",
+  "request": {
+    "url": "https://www.youtube.com/results?search_query=face-cream&sp=CAMSBAgDEAE%253D",
+    "method": "GET",
+    "headers": {},
+    "payload": null,
+    "user_data": {
+      "__crawlee": {
+        "state": 3
+      }
+    },
+    "retry_count": 0,
+    "no_retry": false,
+    "loaded_url": "https://www.youtube.com/results?search_query=face-cream&sp=CAMSBAgDEAE%253D",
+    "handled_at": "2025-07-20 07:22:11.005465+00:00",
+    "unique_key": "https://www.youtube.com/results?search_query=face-cream&sp=camsbagdeae%253d",
+    "id": "KqBlZdt1lANY5Wc"
+  }
+}
