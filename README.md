@@ -7,7 +7,12 @@
    pip install -r requirements.txt
    ```
 
-2. **Run the FastAPI server:**
+2. **Install Playwright browsers:**
+   ```bash
+   playwright install
+   ```
+
+3. **Run the FastAPI server:**
    ```bash
    uvicorn app.main:app --reload
    ```
@@ -18,6 +23,4 @@
 ## Example Usage
 
 To crawl YouTube for the top 5 "face-cream" videos from the last 48 hours, use:
-```
-GET http://127.0.0.1:8000/youtube_crawler?query=face-cream
 ```
