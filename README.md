@@ -26,5 +26,5 @@ To crawl YouTube for the top 5 "face-cream" videos from the last 48 hours, use:
 
 **API Example URL:**
 ```
-http://127.0.0.1:8000/crawl?platform=youtube&query=face-cream
+http://127.0.0.1:8000/youtube_crawler?query=face-cream
 ```
