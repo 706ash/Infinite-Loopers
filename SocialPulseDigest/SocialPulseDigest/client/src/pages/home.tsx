@@ -67,14 +67,36 @@ export default function Home() {
   };
 
   function getDashboardMetrics(digestData: any) {
+    // Find the best YouTube video
+    const bestVideo = (digestData?.topYouTubeVideos ?? []).reduce(
+      (max: any, video: any) => (video.views > (max?.views ?? -1) ? video : max),
+      null
+    );
+
+    // Find the best tweet
+    const bestTweet = (digestData?.trendingTweets ?? []).reduce(
+      (max: any, tweet: any) => (tweet.views > (max?.views ?? -1) ? tweet : max),
+      null
+    );
+
+    // Compare the best video and tweet
+    let topNiche = 'N/A';
+    let maxViews = -1;
+    if (bestVideo && bestVideo.views >= (bestTweet?.views ?? -1)) {
+      topNiche = bestVideo.niche || 'Unknown';
+      maxViews = bestVideo.views;
+    } else if (bestTweet) {
+      topNiche = bestTweet.niche || 'Unknown';
+      maxViews = bestTweet.views;
+    }
+
     const youtube = digestData?.performanceMetrics?.youtube || {};
-    const twitter = digestData?.performanceMetrics?.twitter || {};
     return {
       totalVideos: digestData?.topYouTubeVideos?.length ?? 0,
       totalTweets: digestData?.trendingTweets?.length ?? 0,
       averageViews: youtube.views ?? 0,
-      engagementTrend: 'stable', // or compute based on your data
-      topPerformingNiche: 'N/A', // or compute if you have this info
+      engagementTrend: 'stable' as const,
+      topPerformingNiche: topNiche,
     };
   }
 
@@ -147,6 +169,14 @@ export default function Home() {
               <YouTubeVideoCard key={video.id} video={video} rank={index + 1} />
             ))}
           </div>
+          {/* YouTube Summary */}
+          <div className="mt-6 flex justify-center">
+            <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-xl px-6 py-4 max-w-2xl w-full text-center shadow">
+              <span className="text-lg text-red-700 dark:text-red-300 font-medium">
+                {digestData?.youtubeSummary || "No YouTube summary available."}
+              </span>
+            </div>
+          </div>
         </motion.section>
 
         {/* Trending Twitter Posts Section */}
@@ -172,6 +202,14 @@ export default function Home() {
               );
             })}
           </div>
+          {/* Twitter Summary */}
+          <div className="mt-6 flex justify-center">
+            <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-xl px-6 py-4 max-w-2xl w-full text-center shadow">
+              <span className="text-lg text-blue-700 dark:text-blue-300 font-medium">
+                {digestData?.twitterSummary || "No Twitter summary available."}
+              </span>
+            </div>
+          </div>
         </motion.section>
 
         {/* Audience Sentiment Analysis */}
@@ -182,6 +220,14 @@ export default function Home() {
           className="mb-16"
         >
           <SentimentInfographic sentiment={digestData?.audienceSentiment || {}} />
+          {/* Performance Summary */}
+          <div className="mt-6 flex justify-center">
+            <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-xl px-6 py-4 max-w-2xl w-full text-center shadow">
+              <span className="text-lg text-green-700 dark:text-green-300 font-medium">
+                {digestData?.performanceSummary || "No performance summary available."}
+              </span>
+            </div>
+          </div>
         </motion.section>
 
         {/* Key Insights Section */}
