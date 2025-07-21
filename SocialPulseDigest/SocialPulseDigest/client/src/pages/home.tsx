@@ -66,6 +66,18 @@ export default function Home() {
     return n.toString();
   };
 
+  function getDashboardMetrics(digestData: any) {
+    const youtube = digestData?.performanceMetrics?.youtube || {};
+    const twitter = digestData?.performanceMetrics?.twitter || {};
+    return {
+      totalVideos: digestData?.topYouTubeVideos?.length ?? 0,
+      totalTweets: digestData?.trendingTweets?.length ?? 0,
+      averageViews: youtube.views ?? 0,
+      engagementTrend: 'stable', // or compute based on your data
+      topPerformingNiche: 'N/A', // or compute if you have this info
+    };
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -101,7 +113,7 @@ export default function Home() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="mb-16"
         >
-          <PerformanceMetricsDashboard metrics={digestData?.performanceMetrics || {}} />
+          <PerformanceMetricsDashboard metrics={getDashboardMetrics(digestData)} />
         </motion.section>
 
         {/* Top YouTube Videos Section */}
