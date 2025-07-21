@@ -7,18 +7,40 @@ import { SentimentInfographic } from "@/components/digest/sentiment-infographic"
 import { PerformanceMetricsDashboard } from "@/components/digest/performance-metrics-dashboard";
 import { useToast } from "@/hooks/use-toast";
 import { generateMockDigest } from "@/lib/mock-data";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const [selectedNiche, setSelectedNiche] = useState('finance');
-  const [digestData, setDigestData] = useState(generateMockDigest('finance'));
+  const [digestData, setDigestData] = useState<any>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    async function fetchDigest() {
+      const { data, error } = await supabase
+        .from('digests')
+        .select('digest')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      if (error) {
+        toast({ title: "Error", description: "Failed to fetch digest." });
+        return;
+      }
+      setDigestData(data.digest);
+    }
+    fetchDigest();
+  }, []);
+
+  if (!digestData) {
+    return <div>Loading...</div>;
+  }
+
   const handleRegenerate = () => {
-    setDigestData(generateMockDigest(selectedNiche));
+    // This function will be updated to regenerate from Supabase
     toast({
-      title: "Digest Regenerated",
-      description: "Your digest has been updated with fresh content.",
+      title: "Regenerate not implemented",
+      description: "Regeneration from Supabase is not yet available.",
     });
   };
 
@@ -35,6 +57,14 @@ export default function Home() {
     { id: 'lifestyle', name: 'Lifestyle', icon: MessageSquare, color: 'from-purple-500 to-pink-500' },
     { id: 'crypto', name: 'Cryptocurrency', icon: BarChart3, color: 'from-orange-500 to-red-500' },
   ];
+
+  const formatNumber = (num: any) => {
+    if (num === undefined || num === null || isNaN(Number(num))) return '0';
+    const n = Number(num);
+    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+    if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+    return n.toString();
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -60,7 +90,7 @@ export default function Home() {
             {selectedNiche.charAt(0).toUpperCase() + selectedNiche.slice(1)} Digest
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            {digestData.summary}
+            {digestData?.summary || "No summary available for this niche."}
           </p>
         </motion.div>
 
@@ -71,7 +101,7 @@ export default function Home() {
           transition={{ duration: 0.7, delay: 0.1 }}
           className="mb-16"
         >
-          <PerformanceMetricsDashboard metrics={digestData.performanceMetrics} />
+          <PerformanceMetricsDashboard metrics={digestData?.performanceMetrics || {}} />
         </motion.section>
 
         {/* Top YouTube Videos Section */}
@@ -86,7 +116,7 @@ export default function Home() {
             Top 5 YouTube Videos
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-            {digestData.topYouTubeVideos.map((video, index) => (
+            {digestData?.topYouTubeVideos?.map((video: any, index: number) => (
               <YouTubeVideoCard key={video.id} video={video} rank={index + 1} />
             ))}
           </div>
@@ -104,7 +134,7 @@ export default function Home() {
             Trending Twitter/X Posts
           </h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {digestData.trendingTweets.map((tweet, index) => (
+            {digestData?.trendingTweets?.map((tweet: any, index: number) => (
               <TwitterPostCard key={tweet.id} post={tweet} rank={index + 1} />
             ))}
           </div>
@@ -117,7 +147,7 @@ export default function Home() {
           transition={{ duration: 0.7, delay: 0.4 }}
           className="mb-16"
         >
-          <SentimentInfographic sentiment={digestData.audienceSentiment} />
+          <SentimentInfographic sentiment={digestData?.audienceSentiment || {}} />
         </motion.section>
 
         {/* Key Insights Section */}
@@ -132,7 +162,7 @@ export default function Home() {
             Key Insights & Takeaways
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {digestData.keyInsights.map((insight, index) => (
+            {digestData?.keyInsights?.map((insight: string, index: number) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}

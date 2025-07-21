@@ -19,13 +19,22 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
     stable: "text-gray-500"
   };
 
-  const TrendIcon = trendIcon[metrics.engagementTrend];
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
-    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
-    return num.toString();
+  // Bulletproof formatNumber
+  const formatNumber = (num: any) => {
+    if (num === undefined || num === null || isNaN(Number(num))) return '0';
+    const n = Number(num);
+    if (n >= 1000000) return `${(n / 1000000).toFixed(1)}M`;
+    if (n >= 1000) return `${(n / 1000).toFixed(1)}K`;
+    return n.toString();
   };
+
+  // Defensive metric access
+  const totalVideos = metrics?.totalVideos ?? 0;
+  const totalTweets = metrics?.totalTweets ?? 0;
+  const averageViews = metrics?.averageViews ?? 0;
+  const engagementTrend = metrics?.engagementTrend ?? 'stable';
+  const topPerformingNiche = metrics?.topPerformingNiche ?? 'N/A';
+  const TrendIcon = trendIcon[engagementTrend];
 
   return (
     <div className="bg-card rounded-2xl shadow-lg p-8 border">
@@ -46,7 +55,7 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
             <Youtube className="w-8 h-8 text-red-500" />
             <div className="text-right">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {metrics.totalVideos}
+                {formatNumber(totalVideos)}
               </div>
               <div className="text-sm text-red-700 dark:text-red-300">Total Videos</div>
             </div>
@@ -72,7 +81,7 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
             <Twitter className="w-8 h-8 text-blue-500" />
             <div className="text-right">
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {formatNumber(metrics.totalTweets)}
+                {formatNumber(totalTweets)}
               </div>
               <div className="text-sm text-blue-700 dark:text-blue-300">Total Tweets</div>
             </div>
@@ -98,7 +107,7 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
             <BarChart3 className="w-8 h-8 text-purple-500" />
             <div className="text-right">
               <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
-                {formatNumber(metrics.averageViews)}
+                {formatNumber(averageViews)}
               </div>
               <div className="text-sm text-purple-700 dark:text-purple-300">Avg Views</div>
             </div>
@@ -121,10 +130,10 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
           className="bg-green-50 dark:bg-green-950/20 rounded-xl p-6 border border-green-200 dark:border-green-800"
         >
           <div className="flex items-center justify-between mb-3">
-            <TrendIcon className={`w-8 h-8 ${trendColor[metrics.engagementTrend]}`} />
+            <TrendIcon className={`w-8 h-8 ${trendColor[engagementTrend]}`} />
             <div className="text-right">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400 capitalize">
-                {metrics.engagementTrend}
+                {engagementTrend}
               </div>
               <div className="text-sm text-green-700 dark:text-green-300">Engagement</div>
             </div>
@@ -132,11 +141,11 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
           <div className="w-full bg-green-200 dark:bg-green-900/30 rounded-full h-2">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: metrics.engagementTrend === 'up' ? "100%" : metrics.engagementTrend === 'down' ? "30%" : "60%" }}
+              animate={{ width: engagementTrend === 'up' ? "100%" : engagementTrend === 'down' ? "30%" : "60%" }}
               transition={{ duration: 1, delay: 1.1 }}
               className={`h-2 rounded-full ${
-                metrics.engagementTrend === 'up' ? 'bg-green-500' : 
-                metrics.engagementTrend === 'down' ? 'bg-red-500' : 'bg-gray-500'
+                engagementTrend === 'up' ? 'bg-green-500' : 
+                engagementTrend === 'down' ? 'bg-red-500' : 'bg-gray-500'
               }`}
             />
           </div>
@@ -153,7 +162,7 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
         <h4 className="font-semibold text-lg text-card-foreground mb-2">🏆 Top Performing Niche</h4>
         <div className="flex items-center justify-between">
           <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 capitalize">
-            {metrics.topPerformingNiche.replace('-', ' ')}
+            {topPerformingNiche.replace('-', ' ')}
           </span>
           <span className="bg-yellow-100 dark:bg-yellow-950/30 text-yellow-700 dark:text-yellow-300 px-4 py-2 rounded-full text-sm font-semibold">
             Leading Category

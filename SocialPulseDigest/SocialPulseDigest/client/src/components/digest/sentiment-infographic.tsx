@@ -64,7 +64,7 @@ export function SentimentInfographic({ sentiment }: SentimentInfographicProps) {
           <span className="font-semibold text-card-foreground">Total Engagement</span>
           <span className="flex items-center gap-2 text-muted-foreground">
             <TrendingUp className="w-4 h-4" />
-            {sentiment.totalEngagement.toLocaleString()}
+            {(sentiment?.totalEngagement ?? 0).toLocaleString()}
           </span>
         </div>
         <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
@@ -85,7 +85,7 @@ export function SentimentInfographic({ sentiment }: SentimentInfographicProps) {
             Top Positive Comments
           </h4>
           <div className="space-y-3">
-            {sentiment.topPositiveComments.map((comment, index) => (
+            {(sentiment.topPositiveComments ?? []).map((comment, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: -20 }}
@@ -105,7 +105,7 @@ export function SentimentInfographic({ sentiment }: SentimentInfographicProps) {
             Top Concerns
           </h4>
           <div className="space-y-3">
-            {sentiment.topConcerns.map((concern, index) => (
+            {(sentiment.topConcerns ?? []).map((concern, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: 20 }}
