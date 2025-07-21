@@ -1,0 +1,240 @@
+--
+
+### 🎨 **PROJECT PROMPT: P5 – Branded Social Digest (Fun, Animated Version)**
+
+---
+
+### 🧭 **Objective:**
+
+Design a **playful, highly personalized, and colorful digest web experience** that delivers curated social media insights (from YouTube and X) for brands. It should feel like an animated editorial, **tailored to each brand’s niche and tone** — not a dashboard, but a living, breathing brand report.
+
+All digests are formatted as a **single scrollable page** with delightful microinteractions, creative transitions, and embedded content blocks (tweets/videos).
+
+---
+
+### 🌈 **Visual & UX Design Style:**
+
+* **Colorful & Dynamic**, not sterile or overly minimal
+* Personalize **theme colors** based on brand **niche** (e.g., pastel peach for beauty, vibrant purples for tech, greens for sustainability)
+* Light mode only (for now), but well-contrasted and soft on the eyes
+* Fluid, animated UI — scrolling should feel like flipping through a designer magazine
+* Drop shadows, soft gradients, interactive cards
+* Responsive for mobile/tablet/desktop
+
+---
+
+### 🧩 **Core Components to Include:**
+
+#### ✅ **1. Newsletter Digest Layout (1 page, fully scrollable)**
+
+This is the main page where the digest appears. Break it into creative, animated blocks:
+
+---
+
+**🎬 Header / Intro Block:**
+
+* Brand logo + name
+* “Digest for: \[Niche]” subline
+* Timeframe: “Last 48 Hours”
+* Soft animated background (e.g., color blobs, floating icons related to niche)
+* CTA buttons: Send to Slack | Copy to Notion | Save Digest
+
+---
+
+**📈 Section 1: Top Performing Content**
+
+* Card grid or carousel of best-performing posts
+* Each card includes:
+
+  * Platform tag (X or YouTube)
+  * Title + short summary
+  * Real-time metric ticker: likes, views, shares
+  * 🖼️ Thumbnail or preview image
+  * **Embedded tweet or YouTube video** (auto expands on hover or tap)
+  * "Why it worked" blurb — AI-generated insight
+
+✨ **Animation Ideas:**
+
+* Cards lift on hover
+* Smooth slide-in of text on scroll
+* Bar graph transitions for metrics
+
+---
+
+**💬 Section 2: What Your Audience is Saying**
+
+* **Word cloud + trending hashtag tags** (auto animate and float on scroll)
+* **Featured Replies** shown in dynamic chat bubbles (styled as a branded thread)
+* Embeddable tweet module for reply examples
+* “Tone Analysis” visual (e.g., animated pie or bar)
+
+🎨 Use speech-bubble or quote-block styles, color-coded by sentiment
+
+---
+
+**🌟 Section 3: Rising Creators in Your Space**
+
+* Creator cards:
+
+  * Avatar
+  * Handle + mini-bio
+  * Top post preview (with embed)
+  * Engagement stats
+* Callout section: “Brands like you should follow…”
+
+🎯 Niche-specific color theme applies here too
+
+---
+
+**📌 Section 4: What This Means For You (Insights)**
+
+* 3–5 **actionable bullet takeaways**
+* “Next Content Ideas” section — AI-suggested formats or hooks
+* Background animation: flowing gradient or subtle motion
+
+---
+
+**📤 CTA Footer:**
+
+* Sticky footer with:
+
+  * “Send to Slack”
+  * “Copy to Notion”
+  * “Export Digest”
+* Smooth hover/slide animation on click
+* Auto-copy confirmation toast
+
+---
+
+### 🎨 **Dynamic Color Theming (Based on Brand Niche)**
+
+Build a color theme engine that maps each **niche** to a tailored **light color palette**:
+
+| Niche          | Primary Color | Accent  | Font Color |
+| -------------- | ------------- | ------- | ---------- |
+| Skincare       | #FDE6E6       | #FFB6B6 | #333333    |
+| Fintech        | #F0F9FF       | #00A6FB | #1A1A1A    |
+| Sustainability | #E8F5E9       | #4CAF50 | #2F2F2F    |
+| Gaming         | #F3E5F5       | #AB47BC | #212121    |
+| Tech/Dev       | #E3F2FD       | #2979FF | #2A2A2A    |
+
+Each theme changes:
+
+* Background gradients
+* Card colors
+* Buttons
+* Fonts & accents
+
+---
+
+### 🖼️ **Embedded Post Components**
+
+Build reusable components for **YouTube & Twitter post embeds**:
+
+#### 1. `YouTubePostEmbed`:
+
+```ts
+props: {
+  videoId: string,
+  title: string,
+  thumbnail: string,
+  summary: string,
+  metrics: { views, likes, comments }
+}
+```
+
+Display embedded player, fade-in thumbnail, click-to-play, metric bar animation.
+
+#### 2. `TweetEmbedCard`:
+
+```ts
+props: {
+  tweetId: string,
+  authorHandle: string,
+  content: string,
+  sentiment: string
+}
+```
+
+Styled like Twitter embed, with animated frame, sentiment badge, and “View Thread” link.
+
+---
+
+### 🧾 **Descriptive Brand Profile Form (Onboarding)**
+
+Make it feel like the user is designing their own magazine. Ask:
+
+* Brand Name
+* Logo Upload
+* Website / Social Handles
+* Pick Your Niche (dropdown w/ icons)
+* Describe Your Audience
+* Select Your Brand Personality:
+
+  * Calm, Bold, Quirky, Professional
+* Choose Your Digest Style:
+
+  * Minimalist / Colorful / Compact / Visual
+* Pick a Font & Primary Color
+
+This config feeds into both:
+
+* Thematic styling
+* Prompt generation for the LLM
+
+---
+
+### 📦 **How the Digest Data Is Used:**
+
+LLM generates a JSON object in this structure:
+
+```json
+{
+  "brand": "GlowCare",
+  "niche": "skincare",
+  "theme": "pastel",
+  "palette": {
+    "primary": "#FDE6E6",
+    "accent": "#FFB6B6"
+  },
+  "generated_at": "2025-07-21",
+  "sections": {
+    "top_content": [...],
+    "audience_sentiment": {...},
+    "creators": [...],
+    "takeaways": [...]
+  }
+}
+```
+
+Frontend uses this JSON to render each block dynamically, styled per brand.
+
+---
+
+### 💡 Bonus: Micro-Interaction Ideas
+
+* Scroll animations (parallax layers or kinetic text)
+* Toggle to show/hide metrics
+* Hover-reveal “why this post matters”
+* Loading shimmer for incoming embeds
+* Digest page entry animation (like flipping a page)
+
+---
+
+### 🔐 Auth & Data Flow
+
+* Supabase for login + brand profile storage
+* Store digest JSONs in a `digests` table
+* Option to “Re-generate Digest” from frontend → triggers LLM via backend
+* History view of past digests (card view or timeline)
+
+---
+
+### 🔚 Final Summary:
+
+Build a **visually engaging, branded, animated digest website** that feels like a digital magazine. Each page is:
+
+* Themed by niche and brand identity
+* Embeds live content from social platforms
+* Contains actionable, LLM-generated insights
+* Feels fun, fluid, and modern — no sterile SaaS vibes here
