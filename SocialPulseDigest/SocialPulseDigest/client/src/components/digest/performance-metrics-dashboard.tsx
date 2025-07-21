@@ -136,6 +136,9 @@ export function PerformanceMetricsDashboard({ metrics }: PerformanceMetricsDashb
                 {engagementTrend}
               </div>
               <div className="text-sm text-green-700 dark:text-green-300">Engagement</div>
+              <div className="text-lg text-green-500 dark:text-green-300 font-semibold">
+                {formatNumber(metrics.totalEngagement)}
+              </div>
             </div>
           </div>
           <div className="w-full bg-green-200 dark:bg-green-900/30 rounded-full h-2">

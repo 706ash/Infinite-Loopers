@@ -91,12 +91,21 @@ export default function Home() {
     }
 
     const youtube = digestData?.performanceMetrics?.youtube || {};
+    const twitter = digestData?.performanceMetrics?.twitter || {};
+
+    const totalEngagement =
+      (youtube.likes ?? 0) +
+      (youtube.views ?? 0) +
+      (twitter.likes ?? 0) +
+      (twitter.retweets ?? 0);
+
     return {
       totalVideos: digestData?.topYouTubeVideos?.length ?? 0,
       totalTweets: digestData?.trendingTweets?.length ?? 0,
       averageViews: youtube.views ?? 0,
       engagementTrend: 'stable' as const,
       topPerformingNiche: topNiche,
+      totalEngagement, // <-- add this
     };
   }
 

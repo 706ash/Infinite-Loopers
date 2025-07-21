@@ -20,7 +20,7 @@ def _parse_date(date_str: str):
 
 async def run_youtube_crawler(query: str):
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
+        browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
         YOUTUBE_URL = f"https://www.youtube.com/results?search_query={query}&sp=CAI%253D"
         await page.goto(YOUTUBE_URL)
