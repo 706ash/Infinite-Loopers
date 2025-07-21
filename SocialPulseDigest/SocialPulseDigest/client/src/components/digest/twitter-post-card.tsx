@@ -3,7 +3,7 @@ import { Heart, MessageCircle, Repeat2, Eye, ExternalLink } from "lucide-react";
 import { TwitterPost } from "@shared/schema";
 
 interface TwitterPostCardProps {
-  post: TwitterPost;
+  post: TwitterPost & { displayName?: string; handle?: string };
   rank: number;
 }
 
@@ -63,8 +63,8 @@ export function TwitterPostCard({ post, rank }: TwitterPostCardProps) {
               @
             </div>
             <div>
-              <span className="font-semibold text-card-foreground">Financial Guru</span>
-              <span className="text-muted-foreground text-sm ml-2">@FinanceGuru • {formatDate(post.date)}</span>
+              <span className="font-semibold text-card-foreground">{post.displayName || "Unknown"}</span>
+              <span className="text-muted-foreground text-sm ml-2">{post.handle || "@unknown"} • {formatDate(post.date)}</span>
             </div>
           </div>
           <p className="text-card-foreground mb-3 leading-relaxed">

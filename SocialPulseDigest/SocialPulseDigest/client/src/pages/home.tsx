@@ -78,6 +78,21 @@ export default function Home() {
     };
   }
 
+  function extractTwitterNameAndHandle(text: string) {
+    // Match: DisplayName @username ·
+    const match = text.match(/^(.+?)\s+(@\w+)\s+·/);
+    if (match) {
+      return {
+        displayName: match[1].trim(),
+        handle: match[2].trim()
+      };
+    }
+    return {
+      displayName: '',
+      handle: ''
+    };
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -146,9 +161,16 @@ export default function Home() {
             Trending Twitter/X Posts
           </h3>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {digestData?.trendingTweets?.map((tweet: any, index: number) => (
-              <TwitterPostCard key={tweet.id} post={tweet} rank={index + 1} />
-            ))}
+            {digestData?.trendingTweets?.map((tweet: any, index: number) => {
+              const { displayName, handle } = extractTwitterNameAndHandle(tweet.text);
+              return (
+                <TwitterPostCard
+                  key={tweet.id}
+                  post={{ ...tweet, displayName, handle }}
+                  rank={index + 1}
+                />
+              );
+            })}
           </div>
         </motion.section>
 
